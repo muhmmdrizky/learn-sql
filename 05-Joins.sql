@@ -34,3 +34,15 @@ FROM customers AS c
 LEFT JOIN orders AS o ON c.`CustomerID` = o.`CustomerID`;
 
 -- Menampilkan semua produk dan jumlah reviewnya:
+SELECT p.`ProductID`, p.`ProductName`, COUNT(r.`ReviewID`) AS ReviewCount
+FROM products AS p
+LEFT JOIN reviews AS r ON p.`ProductID` = r.`ProductID`
+GROUP BY p.`ProductID`, p.`ProductName`;
+
+-- Menampilkan semua supplier dan total nilai produk mereka dalam inventori:
+SELECT s.`SupplierID`, s.`SupplierName`,
+    COALESCE(SUM(p.`Price` * i.`Quantity`), 0) AS TotalInventoryValue
+FROM suppliers AS s
+LEFT JOIN products AS p ON s.`SupplierID` = p.`SupplierID`
+LEFT JOIN inventory AS i ON p.`ProductID` = i.`ProductID`
+GROUP BY s.`SupplierID`, s.`SupplierName`;
